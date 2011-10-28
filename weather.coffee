@@ -11,23 +11,25 @@ else
       console.log 'Unable to load the address!'
       phantom.exit(1)
     else
-      page.includeJs "http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js", ->
-        coordinates = page.evaluate ->
-          weather = jQuery('.obcontainer')
-          weatherTables = jQuery('.obcontainer table')
-          if weatherTables.length > 1
-            weatherTables.last().remove()
-          if weather.length > 0
-            data = weather.offset()
-            data.height = weather.height()
-            data.width = weather.width()
-            return data
+      window.setTimeout ->
+        page.includeJs "http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js", ->
+          coordinates = page.evaluate ->
+            weather = jQuery('.obcontainer')
+            weatherTables = jQuery('.obcontainer table')
+            if weatherTables.length > 1
+              weatherTables.last().remove()
+            if weather.length > 0
+              data = weather.offset()
+              data.height = weather.height()
+              data.width = weather.width()
+              return data
+            else
+              return false
+          if coordinates
+            page.clipRect = coordinates
+            page.render(phantom.args[1])
+            phantom.exit()
           else
-            return false
-        if coordinates
-          page.clipRect = coordinates
-          page.render(phantom.args[1])
-          phantom.exit()
-        else
-          console.log "No weather found"
-          phantom.exit(1)
+            console.log "No weather found"
+            phantom.exit(1)
+      , 200
