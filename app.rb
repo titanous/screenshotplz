@@ -18,7 +18,7 @@ end
 
 get '/weather/:city' do
   filename = image_filename(params[:city])
-  halt 404 unless EM::Synchrony.popen "phantomjs weather.coffee #{params[:city]} public/#{filename}"
+  halt 404 unless EM::Synchrony.popen "phantomjs weather.coffee \"#{params[:city]}\" public/#{filename}"
   redirect filename
 end
 
